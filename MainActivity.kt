@@ -1,3 +1,4 @@
+
 package com.verba.rules
 
 import android.app.Activity
@@ -7,20 +8,30 @@ import android.webkit.WebViewClient
 import android.graphics.Color
 
 class MainActivity : Activity() {
+
+    private lateinit var webView: WebView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val web = WebView(this)
-        web.settings.javaScriptEnabled = true
-        web.settings.domStorageEnabled = true
-        web.settings.allowFileAccess = true
-        web.webViewClient = WebViewClient()
-        web.setBackgroundColor(Color.rgb(11,14,19))
-        web.loadUrl("file:///android_asset/index.html")
-        setContentView(web)
+
+        webView = WebView(this)
+        webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
+        webView.settings.allowFileAccess = true
+        webView.webViewClient = WebViewClient()
+        webView.setBackgroundColor(Color.rgb(11, 14, 19))
+
+        webView.loadUrl("file:///android_asset/index.html")
+
+        setContentView(webView)
     }
+
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        val web = findViewById<WebView>(android.R.id.content)?.getChildAt(0) as? WebView
-        if (web != null && web.canGoBack()) web.goBack() else super.onBackPressed()
+        if (webView.canGoBack()) {
+            webView.goBack()
+        } else {
+            super.onBackPressed()
+        }
     }
 }
