@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.graphics.Color
-import android.view.View
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 class MainActivity : Activity() {
 
@@ -15,11 +17,12 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    window.decorView.systemUiVisibility = (
-        View.SYSTEM_UI_FLAG_FULLSCREEN
-        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-    )
+WindowCompat.setDecorFitsSystemWindows(window, false)
+
+val controller = WindowCompat.getInsetsController(window, window.decorView)
+controller.hide(WindowInsetsCompat.Type.navigationBars())
+controller.systemBarsBehavior =
+    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
 
         webView = WebView(this)
