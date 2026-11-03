@@ -117,7 +117,22 @@ document.getElementById('overlay').onclick=e=>{if(e.target.id==='overlay')e.curr
 document.getElementById('search').oninput=render;
 document.getElementById('punBtn').onclick=()=>{punishmentOnly=!punishmentOnly;document.getElementById('punBtn').classList.toggle('active',punishmentOnly);document.getElementById('allBtn').classList.toggle('active',!punishmentOnly);render()};
 document.getElementById('allBtn').onclick=()=>{punishmentOnly=false;document.getElementById('punBtn').classList.remove('active');document.getElementById('allBtn').classList.add('active');render()};
-document.getElementById('analysisBtn').onclick=()=>{document.getElementById('list').style.display='none';document.getElementById('analysis').classList.add('show');document.getElementById('analysisBtn').classList.add('active')};
+document.getElementById('analysisBtn').onclick=()=>{
+  document.getElementById('list').style.display='none';
+  document.getElementById('analysis').classList.add('show');
+  document.getElementById('analysisBtn').classList.add('active');
+  document.getElementById('top').style.display='none';
+};
+
+document.getElementById('backToRules').onclick=()=>{
+  document.getElementById('analysis').classList.remove('show');
+  document.getElementById('list').style.display='';
+  document.getElementById('analysisBtn').classList.remove('active');
+  document.getElementById('top').style.display='';
+  document.getElementById('result').innerHTML='';
+  document.getElementById('situation').value='';
+  render();
+};
 document.getElementById('analyze').onclick=()=>{
   const q=norm(document.getElementById('situation').value);
   if(!q){document.getElementById('result').innerHTML='<div class="empty">Опиши ситуацію.</div>';return}
