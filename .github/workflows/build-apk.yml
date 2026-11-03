@@ -78,9 +78,9 @@ jobs:
           }
           dependencies {
     
-    implementation("androidx.core:core-ktx:1.15.0")
-    }
-          EOF
+              implementation("androidx.core:core-ktx:1.15.0")
+          }
+        EOF
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
