@@ -80,7 +80,7 @@ jobs:
     
               implementation("androidx.core:core-ktx:1.15.0")
           }
-        EOF
+          EOF
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
