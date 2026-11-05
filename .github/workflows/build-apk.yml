@@ -1,4 +1,3 @@
-
 name: Build Verba Rules APK
 
 on:
@@ -31,22 +30,31 @@ jobs:
           cp styles.xml app/src/main/res/values/styles.xml
 
           cat > app/src/main/AndroidManifest.xml <<'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+              <uses-permission android:name="android.permission.INTERNET" />
+
               <application
                   android:theme="@style/AppTheme"
                   android:label="Verba Rules"
                   android:allowBackup="false"
                   android:supportsRtl="true">
+
                   <activity
                       android:name=".MainActivity"
                       android:exported="true"
                       android:screenOrientation="portrait">
+
                       <intent-filter>
-                          <action android:name="android.intent.action.MAIN"/>
-                          <category android:name="android.intent.category.LAUNCHER"/>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
                       </intent-filter>
+
                   </activity>
+
               </application>
+
           </manifest>
           EOF
 
@@ -55,60 +63,64 @@ jobs:
           android.enableJetifier=true
           EOF
 
-            cat > settings.gradle.kts <<'EOF'
-            pluginManagement {
-                repositories {
-                    google()
-                    mavenCentral()
-                    gradlePluginPortal()
-                }
+          cat > settings.gradle.kts <<'EOF'
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
 
-                 plugins {
-                     id("com.android.application") version "8.7.3"
-                     id("org.jetbrains.kotlin.android") version "2.0.21"
-                }
-            }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
 
-            dependencyResolutionManagement {
-                repositories {
-                    google ()
-                    mavenCentral()
-                }
-            }
+          rootProject.name = "VerbaRules"
+          include(":app")
+          EOF
 
-            rootProject.name = "VerbaRules"
-            include(":app")
-            E0F
-            
-            cat > app/build.gradle.kts <<'EOF'
-          
+          cat > build.gradle.kts <<'EOF'
+          plugins {
+              id("com.android.application") version "8.7.3" apply false
+              id("org.jetbrains.kotlin.android") version "2.0.21" apply false
+          }
+          EOF
+
+          cat > app/build.gradle.kts <<'EOF'
           plugins {
               id("com.android.application")
               id("org.jetbrains.kotlin.android")
           }
+
           android {
               namespace = "com.verba.rules"
               compileSdk = 35
+
               defaultConfig {
                   applicationId = "com.verba.rules"
                   minSdk = 23
                   targetSdk = 35
-                  versionCode = 1
-                  versionName = "1.0"
-                  }
-            compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_17
-                targetCompatibility = JavaVersion.VERSION_17
-            }
 
-            kotlinOptions {
-                jvmTarget = "17"
-            }
+                  versionCode = System.getenv("GITHUB_RUN_NUMBER")?.toIntOrNull() ?: 1
+                  versionName = "1.0.${System.getenv("GITHUB_RUN_NUMBER") ?: "1"}"
+              }
 
-          
+              compileOptions {
+                  sourceCompatibility = JavaVersion.VERSION_17
+                  targetCompatibility = JavaVersion.VERSION_17
+              }
+
+              kotlinOptions {
+                  jvmTarget = "17"
+              }
           }
+
           dependencies {
-    
               implementation("androidx.core:core-ktx:1.15.0")
           }
           EOF
