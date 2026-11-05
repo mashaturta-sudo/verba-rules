@@ -248,34 +248,76 @@ document.getElementById('allBtn').classList.add('active');
 const tabs=document.getElementById('tabs');
 
 function buildCategoryMenu(){
-  tabs.innerHTML = '';
+    tabs.innerHTML = '';
 
-  const categories = [
-    'Основні правила',
-    'Правила сімей',
-    'Правила війни за бізнес',
-    'Правила військового складу',
-    'Правила лідерів та заступників'
-  ];
+    const categories = [
+        'Основні правила',
+        'Правила сімей',
+        'Правила війни за бізнес',
+        'Правила військового складу',
+        'Правила лідерів та заступників'
+    ];
 
-  categories.forEach(category => {
-    const button = document.createElement('button');
+    categories.forEach(category => {
 
-    button.className = 'category-main';
-    button.textContent = category;
+        const branch = document.createElement('div');
+        branch.className = 'rules-branch';
 
-    button.onclick = () => {
-      activeCategory = category;
-      activeSection = 'Усі правила';
-      
-      document
-        .querySelectorAll('.category-main')
-        .forEach(x => x.classList.remove('active'));
+        const button = document.createElement('button');
+        button.className = 'category-main';
+        button.textContent = '🌿 ' + category;
 
-      button.classList.add('active');
+        const sectionsBox = document.createElement('div');
+        sectionsBox.className = 'branch-sections';
 
-      render();
-    };
+        const sections = [...new Set(
+            rules
+                .filter(rule => rule.category === category)
+                .map(rule => rule.section)
+                .filter(section => section && section.trim() !== '')
+        )];
+
+        sections.forEach(section => {
+
+            const sectionButton = document.createElement('button');
+            sectionButton.className = 'section-branch';
+            sectionButton.textContent = '🪻 ' + section;
+
+            sectionButton.onclick = () => {
+                activeCategory = category;
+                activeSection = section;
+
+                document
+                    .querySelectorAll('.section-branch')
+                    .forEach(x => x.classList.remove('active'));
+
+                sectionButton.classList.add('active');
+
+                render();
+            };
+
+            sectionsBox.appendChild(sectionButton);
+        });
+
+        button.onclick = () => {
+
+            activeCategory = category;
+            activeSection = 'Усі правила';
+
+            document
+                .querySelectorAll('.category-main')
+                .forEach(x => x.classList.remove('active'));
+
+            button.classList.add('active');
+
+            sectionsBox.classList.toggle('open');
+        };
+
+        branch.appendChild(button);
+        branch.appendChild(sectionsBox);
+        tabs.appendChild(branch);
+    });
+}
 
     tabs.appendChild(button);
   });
