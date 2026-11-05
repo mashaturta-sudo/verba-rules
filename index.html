@@ -11,6 +11,92 @@
 header{padding:22px 18px 14px;position:sticky;top:0;z-index:5;background:rgba(11,14,19,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .brand{font-size:25px;font-weight:800;letter-spacing:.2px}.sub{color:var(--muted);font-size:13px;margin-top:3px}
 .search{margin-top:15px;display:flex;gap:8px}.search input{width:100%;background:#111620;border:1px solid #303747;border-radius:14px;color:var(--text);padding:14px 15px;font-size:16px;outline:none}.search input:focus{border-color:var(--accent)}
+.search input:focus{
+  border-color:var(--accent)
+}
+
+/* ===== ГЛАВНОЕ МЕНЮ ===== */
+
+.category-main{
+  width:100%;
+  min-height:72px;
+  margin:8px 0;
+  padding:18px 22px;
+
+  background:linear-gradient(145deg,#151b26,#11151d);
+  border:1px solid var(--line);
+  border-radius:16px;
+
+  color:var(--text);
+  font-size:16px;
+  font-weight:700;
+  text-align:left;
+
+  cursor:pointer;
+  transition:
+    transform .15s ease,
+    border-color .15s ease,
+    background .15s ease,
+    box-shadow .15s ease;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.category-main::after{
+  content:"›";
+  font-size:28px;
+  color:var(--accent);
+  transition:transform .15s ease;
+}
+
+.category-main:hover{
+  border-color:var(--accent);
+  background:linear-gradient(145deg,#1b2030,#151927);
+  transform:translateY(-1px);
+  box-shadow:0 8px 25px rgba(0,0,0,.25);
+}
+
+.category-main:hover::after{
+  transform:translateX(4px);
+}
+
+.category-main:active{
+  transform:scale(.99);
+}
+
+.category-main.active{
+  border-color:var(--accent);
+  background:linear-gradient(
+    145deg,
+    rgba(124,92,255,.20),
+    rgba(124,92,255,.08)
+  );
+  box-shadow:0 0 0 1px rgba(124,92,255,.15);
+}
+
+#tabs{
+  margin-top:14px;
+}
+
+@media (max-width:600px){
+  .category-main{
+    min-height:64px;
+    padding:16px 18px;
+    font-size:15px;
+    border-radius:14px;
+  }
+
+  .category-main::after{
+    font-size:24px;
+  }
+}
+
+.tabs{
+  position:relative;
+  padding:10px 18px 4px;
+}
 .tabs{
   position:relative;
   padding:10px 18px 4px;
@@ -150,59 +236,55 @@ const aliases = {
   "капс":["capslock","капслок","верхній регістр"],
   "флуд":["флуд","повторюван","повідомл"]
 };
-let activeSection="Усі правила", punishmentOnly=false;
+let activeSection="Усі правила";
+let activeCategory="Основні правила";
+let punishmentOnly=false;
 
 const tabs=document.getElementById('tabs');
 
 function buildCategoryMenu(){
-  tabs.innerHTML='';
+  tabs.innerHTML = '';
 
-  const categoryToggle=document.createElement('button');
-  categoryToggle.className='category-toggle';
-  categoryToggle.innerHTML=`<span>📚 Категорія: <b>${activeSection}</b></span><span>▼</span>`;
+  const categories = [
+    'Основні правила',
+    'Правила сімей',
+    'Правила війни за бізнес',
+    'Правила військового складу',
+    'Правила лідерів та заступників'
+  ];
 
-  const categoryMenu=document.createElement('div');
-  categoryMenu.className='category-menu';
+  categories.forEach(category => {
+    const button = document.createElement('button');
 
-  const sections=["Усі правила", ...new Set(RULES.map(r=>r.section))];
+    button.className = 'category-main';
+    button.textContent = category;
 
-  sections.forEach(s=>{
-    const b=document.createElement('button');
-    b.className='tab'+(s===activeSection?' active':'');
-    b.textContent=s;
+    button.onclick = () => {
+      activeCategory = category;
+      activeSection = 'Усі правила';
+      
+      document
+        .querySelectorAll('.category-main')
+        .forEach(x => x.classList.remove('active'));
 
-    b.onclick=()=>{
-      activeSection=s;
-
-      categoryToggle.innerHTML=
-        `<span>📚 Категорія: <b>${activeSection}</b></span><span>▼</span>`;
-
-      [...categoryMenu.children].forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-
-      categoryMenu.classList.remove('show');
-      categoryToggle.classList.remove('active');
+      button.classList.add('active');
 
       render();
     };
 
-    categoryMenu.appendChild(b);
+    tabs.appendChild(button);
   });
-
-  tabs.appendChild(categoryToggle);
-  tabs.appendChild(categoryMenu);
-
-  categoryToggle.onclick=()=>{
-    categoryMenu.classList.toggle('show');
-    categoryToggle.classList.toggle('active');
-  };
 }
 
 function norm(s){return s.toLowerCase().replaceAll('’',"'").replace(/[^a-zа-яіїєґ0-9.+-]/gi,' ')}
 function searchable(r){return norm([r.id,r.text,r.punishment,r.notes,r.examples,r.section].join(' '))}
 function render(){
   const q=norm(document.getElementById('search').value);
-  const arr=RULES.filter(r=>(activeSection==="Усі правила"||r.section===activeSection)&&(!punishmentOnly||r.punishment));
+  const arr=RULES.filter(r=>
+  (activeCategory==="Усі правила" || r.category===activeCategory) &&
+  (activeSection==="Усі правила" || r.section===activeSection) &&
+  (punishmentOnly || r.punishment)
+);
   const out=q?arr.filter(r=>searchable(r).includes(q)||q.split(/\s+/).filter(Boolean).every(w=>searchable(r).includes(w))):arr;
   document.getElementById('count').textContent=out.length;
   const list=document.getElementById('list');
