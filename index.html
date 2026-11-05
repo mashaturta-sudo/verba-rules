@@ -310,7 +310,7 @@ document.getElementById('close').onclick=()=>document.getElementById('overlay').
 document.getElementById('overlay').onclick=e=>{if(e.target.id==='overlay')e.currentTarget.classList.remove('show')};
 document.getElementById('search').oninput=render;
 document.getElementById('punBtn').onclick=()=>{punishmentOnly=!punishmentOnly;document.getElementById('punBtn').classList.toggle('active',punishmentOnly);document.getElementById('allBtn').classList.toggle('active',!punishmentOnly); render()};
-document.getElementById('allBtn').onclick=()=>{punishmentOnly=false;document.getElementById('punBtn').classList.remove('active');document.getElementById('allBtn').classList.add('active');render()};
+document.getElementById('allBtn').onclick=()=>{punishmentOnly=false;document.getElementById('punBtn').classList.remove('active');document.getElementById('allBtn').classList.add('active'); render()};
 document.getElementById('analysisBtn').onclick=()=>{
   document.getElementById('list').style.display='none';
   document.getElementById('analysis').classList.add('show');
