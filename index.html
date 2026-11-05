@@ -309,7 +309,7 @@ function copyRule(id){const r=RULES.find(x=>x.id===id);const t=`${r.id} — ${r.
 document.getElementById('close').onclick=()=>document.getElementById('overlay').classList.remove('show');
 document.getElementById('overlay').onclick=e=>{if(e.target.id==='overlay')e.currentTarget.classList.remove('show')};
 document.getElementById('search').oninput=render;
-document.getElementById('punBtn').onclick=()=>{punishmentOnly=!punishmentOnly;document.getElementById('punBtn').classList.toggle('active',punishmentOnly);document.getElementById('allBtn').classList.toggle('active',!punishmentOnly);render()};
+document.getElementById('punBtn').onclick=()=>{punishmentOnly=!punishmentOnly;document.getElementById('punBtn').classList.toggle('active',punishmentOnly);document.getElementById('allBtn').classList.toggle('active',!punishmentOnly); render()};
 document.getElementById('allBtn').onclick=()=>{punishmentOnly=false;document.getElementById('punBtn').classList.remove('active');document.getElementById('allBtn').classList.add('active');render()};
 document.getElementById('analysisBtn').onclick=()=>{
   document.getElementById('list').style.display='none';
