@@ -26,6 +26,7 @@ jobs:
           mkdir -p app/src/main/res/values
 
           cp index.html app/src/main/assets/index.html
+          cp rules.json app/src/main/assets/rules.json
           cp MainActivity.kt app/src/main/java/com/verba/rules/MainActivity.kt
           cp styles.xml app/src/main/res/values/styles.xml
 
