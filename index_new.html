@@ -713,28 +713,46 @@ document.addEventListener('keydown', event => {
 });
 
 async function loadRules(){
-  try{
-    const response = await fetch('rules.json', {cache:'no-store'});
-    if(!response.ok) throw new Error('HTTP ' + response.status);
+    try{
+        let response;
 
-    const data = await response.json();
-    if(!Array.isArray(data)) throw new Error('rules.json має неправильний формат');
+        try{
+            response = await fetch('rules.json', {cache:'no-store'});
+        }catch(e){
+            response = await fetch(
+                'https://raw.githubusercontent.com/mashaturta-sudo/verba-rules/main/rules.json',
+                {cache:'no-store'}
+            );
+        }
 
-    RULES = data;
-    buildCategoryMenu();
-    render();
-  }catch(error){
-    console.error(error);
-    $('count').textContent = '—';
-    $('sectionCount').textContent = '—';
-    $('tabs').innerHTML = '';
-    $('list').innerHTML = `
-      <div class="status error">
-        <strong>Не вдалося завантажити rules.json</strong><br>
-        Перевір, що файл <b>rules.json</b> знаходиться поруч із <b>index.html</b>.
-      </div>
-    `;
-  }
+        if(!response.ok){
+            throw new Error('HTTP ' + response.status);
+        }
+
+        const data = await response.json();
+
+        if(!Array.isArray(data)){
+            throw new Error('rules.json має неправильний формат');
+        }
+
+        RULES = data;
+
+        buildCategoryMenu();
+        render();
+
+    }catch(error){
+        console.error(error);
+
+        $('#count').textContent = '0';
+        $('#sectionCount').textContent = '—';
+        $('#tabs').innerHTML = '';
+        $('#list').innerHTML = `
+            <div class="status error">
+                <strong>Не вдалося завантажити rules.json</strong><br>
+                Перевір, що файл rules.json знаходиться в репозиторії.
+            </div>
+        `;
+    }
 }
 
 loadRules();
