@@ -239,6 +239,7 @@ const aliases = {
 let activeSection="Усі правила";
 let activeCategory="Основні правила";
 let punishmentOnly=false;
+document.getElementById('allBtn').classList.add('active');
 
 const tabs=document.getElementById('tabs');
 
@@ -283,7 +284,7 @@ function render(){
   const arr=RULES.filter(r=>
   (activeCategory==="Усі правила" || r.category===activeCategory) &&
   (activeSection==="Усі правила" || r.section===activeSection) &&
-  (punishmentOnly || r.punishment)
+  (!punishmentOnly || r.punishment)
 );
   const out=q?arr.filter(r=>searchable(r).includes(q)||q.split(/\s+/).filter(Boolean).every(w=>searchable(r).includes(w))):arr;
   document.getElementById('count').textContent=out.length;
@@ -309,7 +310,7 @@ function copyRule(id){const r=RULES.find(x=>x.id===id);const t=`${r.id} — ${r.
 document.getElementById('close').onclick=()=>document.getElementById('overlay').classList.remove('show');
 document.getElementById('overlay').onclick=e=>{if(e.target.id==='overlay')e.currentTarget.classList.remove('show')};
 document.getElementById('search').oninput=render;
-document.getElementById('punBtn').onclick=()=>{punishmentOnly=!punishmentOnly;document.getElementById('punBtn').classList.toggle('active',punishmentOnly);document.getElementById('allBtn').classList.toggle('active',!punishmentOnly); render()};
+document.getElementById('punBtn').onclick=()=>{punishmentOnly=true;document.getElementById('punBtn').classList.add('active');document.getElementById('allBtn').classList.remove('active'); render()};
 document.getElementById('allBtn').onclick=()=>{punishmentOnly=false;document.getElementById('punBtn').classList.remove('active');document.getElementById('allBtn').classList.add('active'); render()};
 document.getElementById('analysisBtn').onclick=()=>{
   document.getElementById('list').style.display='none';
